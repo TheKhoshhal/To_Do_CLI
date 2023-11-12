@@ -109,8 +109,6 @@ def show():
 
     console.print(table)
 
-    print(datetime.datetime.now().isoformat())
-
 
 ### TASK Class ###
 class Task:
