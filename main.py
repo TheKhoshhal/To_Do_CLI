@@ -5,6 +5,21 @@ from rich.table import Table
 import pyfiglet as fg
 import json
 from json import JSONEncoder
+import re
+
+
+# ### TASK Class ###
+# class Task:
+#     def __init__(
+#         self,
+#         todo,
+#         category,
+#         status=None,
+#     ):
+#         self.todo = todo
+#         self.category = category
+#         self.status = status if status is not None else 0
+
 
 console = Console()
 app = typer.Typer()
@@ -15,6 +30,34 @@ def add(task: str, category: str):
     console.print(
         f"[italic]Adding [red]{task}[/] from [cyan]{category}[/] category[/italic]"
     )
+
+    added_todo = [task, category, "0"]
+
+    tasks = []
+
+    tasks_file = open("tasks.txt", "r")
+    reading = tasks_file.readline()
+    lines = re.split("/", reading)
+    for line in lines:
+        sub_task = re.split(",", line)
+        tasks.append(sub_task)
+
+    todo_array = [added_todo[0], added_todo[1], added_todo[2]]
+
+    tasks.append(todo_array)
+    tasks_file.close()
+
+    with open("tasks.txt", "w") as f:
+        items = []
+        for array in tasks:
+            new_array = ",".join(array)
+            items.append(new_array)
+
+        new_items = "/".join(items)
+        if new_items[0] == "/":
+            new_items = new_items[1:]
+        f.writelines(new_items)
+
     show()
 
 
@@ -65,12 +108,44 @@ def complete(index: int):
 def delete(index: int):
     console.print(f"Deleted item [cyan]{index}[/] from todos")
 
+    tasks = []
+
+    tasks_file = open("tasks.txt", "r")
+    reading = tasks_file.readline()
+    lines = re.split("/", reading)
+    for line in lines:
+        sub_task = re.split(",", line)
+        tasks.append(sub_task)
+
+    tasks.pop(index - 1)
+
+    tasks_file.close()
+
+    with open("tasks.txt", "w") as f:
+        items = []
+        for array in tasks:
+            new_array = ",".join(array)
+            items.append(new_array)
+
+        new_items = "/".join(items)
+        if new_items[0] == "/":
+            new_items = new_items[1:]
+        f.writelines(new_items)
+
+    show()
+
 
 @app.command()
 def show():
-    completed = True
+    # tasks = [("Todo1", "none"), ("Todo2", "family")]
+    tasks = []
 
-    tasks = [["Todo1", "none"], ["Todo2", "family"]]
+    tasks_file = open("tasks.txt", "r")
+    reading = tasks_file.readline()
+    lines = re.split("/", reading)
+    for line in lines:
+        sub_task = re.split(",", line)
+        tasks.append(sub_task)
 
     console.print("\n")
 
@@ -89,6 +164,12 @@ def show():
     categories = json.load(file)
 
     for index, todo in enumerate(tasks, start=1):
+        completed = True
+        if todo[2][0] == "1":
+            completed = True
+        elif todo[2][0] == "0":
+            completed = False
+
         isDone = "Done ✅" if completed else "Open ❌"
         isDone_color = "green" if isDone == "Done ✅" else "red"
 
@@ -108,32 +189,6 @@ def show():
     # table.add_row("2", "Todo2", "music")
 
     console.print(table)
-
-
-### TASK Class ###
-class Task:
-    def __init__(
-        self,
-        todo,
-        category,
-        date_added=None,
-        date_completed=None,
-        completed=None,
-        index=None,
-    ):
-        self.todo = todo
-        self.category = category
-        self.date_added = (
-            date_added
-            if date_added is not None
-            else datetime.datetime.now().isoformat()
-        )
-        self.date_completed = date_completed if date_completed is not None else None
-        self.completed = completed if completed is not None else 1
-        self.index = index if index is not None else None
-
-    def __repr__(self) -> str:
-        return f"({self.task}, {self.category}, {self.date_added}, {self.date_completed}, {self.status}, {self.position})"
 
 
 if __name__ == "__main__":
