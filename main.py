@@ -135,6 +135,12 @@ def delete(index: int):
     show()
 
 
+@app.command(short_help="Clears all tasks")
+def clear_all():
+    with open("tasks.txt", "w") as f:
+        f.writelines("")
+
+
 @app.command()
 def show():
     # tasks = [("Todo1", "none"), ("Todo2", "family")]
