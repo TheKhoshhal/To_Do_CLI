@@ -61,6 +61,12 @@ def add(task: str, category: str):
     show()
 
 
+@app.command()
+def update(index: int, task: str, category: str):
+    # cancelled#
+    pass
+
+
 @app.command(short_help="add a category color using hex color")
 def category_add(name: str, color: str):
     file = open("categories.json", "r")
