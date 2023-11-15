@@ -63,8 +63,34 @@ def add(task: str, category: str):
 
 @app.command()
 def update(index: int, task: str, category: str):
-    # cancelled#
-    pass
+    tasks = []
+
+    tasks_file = open("tasks.txt", "r")
+    reading = tasks_file.readline()
+    lines = re.split("/", reading)
+    for line in lines:
+        sub_task = re.split(",", line)
+        tasks.append(sub_task)
+
+    selected_item = tasks[index - 1]
+    selected_item[0] = task
+    selected_item[1] = category
+    selected_item[2] = "0"
+
+    tasks_file.close()
+
+    with open("tasks.txt", "w") as f:
+        items = []
+        for array in tasks:
+            new_array = ",".join(array)
+            items.append(new_array)
+
+        new_items = "/".join(items)
+        if new_items[0] == "/":
+            new_items = new_items[1:]
+        f.writelines(new_items)
+
+    show()
 
 
 @app.command(short_help="add a category color using hex color")
