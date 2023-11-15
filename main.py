@@ -116,7 +116,7 @@ def category_del(name: str):
     file = open("categories.json", "r")
     categories = json.load(file)
 
-    if name in categories.keys() and name != "others":
+    if name in categories.keys():
         categories.pop(name)
         # categories.update(new_color)
 
@@ -265,6 +265,7 @@ def show():
 
     file = open("categories.json")
     categories = json.load(file)
+    categories = {**categories, **{"others": "#63e6be"}}
 
     for index, todo in enumerate(tasks, start=1):
         completed = True
