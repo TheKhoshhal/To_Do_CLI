@@ -101,7 +101,72 @@ def category_del(name: str):
 
 @app.command()
 def complete(index: int):
-    console.print(f"Completed task [cyan]{index}[/]")
+    tasks = []
+
+    tasks_file = open("tasks.txt", "r")
+    reading = tasks_file.readline()
+    lines = re.split("/", reading)
+    for line in lines:
+        sub_task = re.split(",", line)
+        tasks.append(sub_task)
+
+    if tasks[index - 1][2] == "0":
+        tasks[index - 1][2] = "1"
+        console.print(f"Completed task [cyan]{index}[/]")
+    else:
+        console.print(
+            f"[white on red]Task number [cyan]{index}[/cyan] already completed[/]"
+        )
+
+    tasks_file.close()
+
+    with open("tasks.txt", "w") as f:
+        items = []
+        for array in tasks:
+            new_array = ",".join(array)
+            items.append(new_array)
+
+        new_items = "/".join(items)
+        if new_items[0] == "/":
+            new_items = new_items[1:]
+        f.writelines(new_items)
+
+    show()
+
+
+@app.command()
+def open_task(index: int):
+    tasks = []
+
+    tasks_file = open("tasks.txt", "r")
+    reading = tasks_file.readline()
+    lines = re.split("/", reading)
+    for line in lines:
+        sub_task = re.split(",", line)
+        tasks.append(sub_task)
+
+    if tasks[index - 1][2] == "1":
+        tasks[index - 1][2] = "0"
+        console.print(f"Opened task [cyan]{index}[/]")
+    else:
+        console.print(
+            f"[white on red]Task number [cyan]{index}[/cyan] is already open[/]"
+        )
+
+    tasks_file.close()
+
+    with open("tasks.txt", "w") as f:
+        items = []
+        for array in tasks:
+            new_array = ",".join(array)
+            items.append(new_array)
+
+        new_items = "/".join(items)
+        if new_items[0] == "/":
+            new_items = new_items[1:]
+        f.writelines(new_items)
+
+    show()
 
 
 @app.command()
