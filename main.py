@@ -7,25 +7,11 @@ import json
 from json import JSONEncoder
 import re
 
-
-# ### TASK Class ###
-# class Task:
-#     def __init__(
-#         self,
-#         todo,
-#         category,
-#         status=None,
-#     ):
-#         self.todo = todo
-#         self.category = category
-#         self.status = status if status is not None else 0
-
-
 console = Console()
 app = typer.Typer()
 
 
-@app.command(short_help="add an item")
+@app.command(short_help="adds an item('task' 'category')")
 def add(task: str, category: str):
     console.print(
         f"[italic]Adding [red]{task}[/] from [cyan]{category}[/] category[/italic]"
