@@ -260,8 +260,8 @@ def show():
         elif todo[2][0] == "0":
             completed = False
 
-        isDone = "Done ✅" if completed else "Open ❌"
-        isDone_color = "green" if isDone == "Done ✅" else "red"
+        isDone = "Done " if completed else "Open "
+        isDone_color = "green" if isDone == "Done " else "red"
 
         category_color = (
             categories[todo[1]] if todo[1] in categories else categories["others"]
